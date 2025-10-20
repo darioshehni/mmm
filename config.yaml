@@ -1,0 +1,21 @@
+splitter:
+  k: 0.02
+  min_share: 0.05
+  max_change: 0.05
+
+constraints:
+  max_price_move_pct: 0.15
+  ladder_gap_by_storage_step: 50
+
+optimizer:
+  method: coordinate_descent   # or: grid
+  step: 10
+  max_iter: 200
+  patience: 5
+
+baselines:
+  lookback_weeks: 8
+  exclude_promos: true
+
+# (If you prefer zero extra deps, provide this as config.json instead and the engine will load it without PyYAML.)
+
