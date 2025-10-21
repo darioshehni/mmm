@@ -13,4 +13,4 @@ max_iter: 300
 
 # Baselines
 baseline_days: 28
-use_promos: true
+use_promos: false
