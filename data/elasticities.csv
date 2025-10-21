@@ -1,2 +1,4 @@
-model_id,elasticity,ref_price,ref_volume
-S24,-1.2,816,270
+model_name,elasticity
+Base,-1.2
+Edge,-1.0
+Ultra,-0.8

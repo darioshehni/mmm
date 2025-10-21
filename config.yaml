@@ -1,21 +1,16 @@
-splitter:
-  k: 0.02
-  min_share: 0.05
-  max_change: 0.05
+# Share sensitivities (per currency unit)
+k_model: 0.02           # switching across models when representative model prices change
+k_sku: 0.02             # switching within a model when SKU prices change
+min_share_sku: 0.03     # minimum SKU share inside a model
 
-constraints:
-  max_price_move_pct: 0.15
-  ladder_gap_by_storage_step: 50
+# Constraints
+max_price_move_pct: 0.15
+price_tick: 5
 
-optimizer:
-  method: coordinate_descent   # or: grid
-  step: 10
-  max_iter: 200
-  patience: 5
+# Optimizer
+step: 5
+max_iter: 300
 
-baselines:
-  lookback_weeks: 8
-  exclude_promos: true
-
-# (If you prefer zero extra deps, provide this as config.json instead and the engine will load it without PyYAML.)
-
+# Baselines
+baseline_days: 28
+use_promos: true
