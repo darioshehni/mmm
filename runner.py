@@ -81,15 +81,6 @@ def recommend_prices(transactions_df, elasticities_df, min_price_df, cfg):
         .apply(list)
         .to_dict()
     )
-    if "unknown" in skus_by_model:
-        logging.warning("Some SKUs had unknown model; excluding them from optimization.")
-        del skus_by_model["unknown"]
-        baseline_sku_share_df = baseline_sku_share_df[baseline_sku_share_df["model_name"] != "unknown"]
-        models = sorted(baseline_sku_share_df["model_name"].unique().tolist())
-        active_skus = set(baseline_sku_share_df["SKU_id"])
-        min_price = min_price[min_price["SKU_id"].isin(active_skus)].copy()
-        last_price_df = last_price_df[last_price_df["SKU_id"].isin(active_skus)].copy()
-        avg_price_sku_df = avg_price_sku_df[avg_price_sku_df["SKU_id"].isin(active_skus)].copy()
 
     # Costs: take the most recent cost per SKU within the window, else from full data
     cost_df = window.sort_values("date_time").groupby("SKU_id", as_index=False).tail(1)[["SKU_id", "cost_unit"]]
@@ -107,7 +98,7 @@ def recommend_prices(transactions_df, elasticities_df, min_price_df, cfg):
     # Keep only active SKUs in start prices
     start_prices = {k: v for k, v in start_prices.items() if k in active_skus}
 
-    # 8) Build the profit objective (now with clearer naming)
+    # 8) Build the profit objective
     profit_fn = build_profit_objective(
         cost_by_sku=cost_by_sku,
         category_elasticity=category_elasticity,
@@ -138,7 +129,7 @@ def recommend_prices(transactions_df, elasticities_df, min_price_df, cfg):
         max_move_pct=cfg["max_price_move_pct"], price_tick=cfg["price_tick"]
     )
 
-    # 11) Return tidy DataFrame
+    # 11) Return DataFrame
     sku_to_model = (
         baseline_sku_share_df.drop_duplicates(subset=["SKU_id"])[["SKU_id", "model_name"]]
         .set_index("SKU_id")["model_name"].to_dict()
